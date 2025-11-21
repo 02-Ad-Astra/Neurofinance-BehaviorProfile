@@ -28,20 +28,6 @@ import { ProbabilitySummary } from "../tasks/ProbabilityWeighting";
 import { CalibrationSummary } from "../tasks/ConfidenceCalibration";
 import { AnchoringSummary } from "../tasks/AnchoringRecall";
 
-const [expandedKey, setExpandedKey] = React.useState(null);
-const [isMobile, setIsMobile] = React.useState(
-  window.innerWidth < 768
-);
-
-// Update when window resized
-React.useEffect(() => {
-  function handleResize() {
-    setIsMobile(window.innerWidth < 768);
-  }
-  window.addEventListener("resize", handleResize);
-  return () => window.removeEventListener("resize", handleResize);
-}, []);
-
 
 /* norm tool; scale every indicator value to 0–1, then *100 for radar chart */
 function norm(value, maxAbs) {
@@ -68,6 +54,19 @@ function weightedAverage(pairs) {
 }
 
 function Dashboard({ results }) {
+  const [expandedKey, setExpandedKey] = React.useState(null);
+  const [isMobile, setIsMobile] = React.useState(
+    typeof window !== "undefined" ? window.innerWidth < 768 : false
+  );
+
+  React.useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < 768);
+    }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const {
     go,
     stroop,
